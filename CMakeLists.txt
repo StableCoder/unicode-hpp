@@ -1,6 +1,25 @@
 cmake_minimum_required(VERSION 3.2)
 project(UnicodeHpp)
 
+# GCC
+if(CMAKE_COMPILER_IS_GNUCXX AND NOT COMPILER_FLAGS_SET)
+    set(COMPILER_FLAGS_SET ON)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Weffc++")
+endif()
+
+# C++17
+set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
+
+if (MSVC_VERSION GREATER_EQUAL "1900" AND CMAKE_VERSION LESS 3.10)
+    include(CheckCXXCompilerFlag)
+    CHECK_CXX_COMPILER_FLAG("/std:c++11" _cpp_latest_flag_supported)
+    if (_cpp_latest_flag_supported)
+        add_compile_options("/std:c++11")
+    endif()
+endif()
+
 # Clang Tools
 file(GLOB_RECURSE ALL_CXX_SOURCE_FILES
     ${PROJECT_SOURCE_DIR}/src/*.[ch]pp
@@ -46,8 +65,6 @@ if(CLANG_TIDY)
 
     add_dependencies(tidy ${PROJECT_NAME}_tidy)
 endif()
-
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14")
 
 add_executable(UnicodeHpp src/unicode_cpp_generator.cpp)
 target_include_directories(UnicodeHpp PUBLIC ext)
