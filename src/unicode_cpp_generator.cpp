@@ -52,13 +52,13 @@ const char *help_str = "This program builds a quick Unicode header for use in C+
                        "higher programs. It lists all unicode blocks, and their starting\n"
                        "and ending code points."
                        "\nProgram Arguments:"
-                       "\n\t--help\t\t: Help Blurb"
-                       "\n\t-blocksize\t: Also builds a function for listing each block's size."
-                       "\n\t-f <filename>\t: The input file to build the unicode block from."
-                       "\n\t\t\t  Must be an XML from Unicode org, such as from"
-                       "\n\t\t\t  http://www.unicode.org/Public/9.0.0/ucdxml/ for 9.0.0"
-                       "\n\t-o <out_dir>\t: This is the directory where the file unicode_blocks.hpp"
-                       "\n\t\t\t  will be written to.";
+                       "\n    --help        : Help Blurb"
+                       "\n    -blocksize    : Also builds a function for listing each block's size."
+                       "\n    -f <filename>    : The input file to build the unicode block from."
+                       "\n              Must be an XML from Unicode org, such as from"
+                       "\n              http://www.unicode.org/Public/9.0.0/ucdxml/ for 9.0.0"
+                       "\n    -o <out_dir>    : This is the directory where the file unicode_blocks.hpp"
+                       "\n              will be written to.";
 
 int main(int argc, const char **argv) {
     std::string input_file = "";
@@ -200,45 +200,41 @@ int main(int argc, const char **argv) {
         std::replace(iter->name.begin(), iter->name.end(), '-', '_');
 
         // Now, write the enum name out.
-        if (iter == unicode_blocks.begin()) {
-            out_file << "\n\t" << iter->name << " = 0x0,";
-        } else {
-            out_file << "\n\t" << iter->name << ',';
-        }
+            out_file << "\n    " << iter->name << ',';
     }
     out_file << "\n};";
 
     // Now we build the unicode block start function
     out_file << std::hex << std::uppercase;
     out_file << "\n\nconstexpr uint32_t getFirstCodePoint(Block unicode_block) {";
-    out_file << "\n\tswitch(unicode_block) {";
+    out_file << "\n    switch(unicode_block) {";
     for (auto iter = unicode_blocks.begin(); iter != unicode_blocks.end(); ++iter) {
-        out_file << "\n\tcase Block::" << iter->name << " :";
-        out_file << "\n\t\treturn 0x" << iter->start << ';';
+        out_file << "\n        case Block::" << iter->name << " :";
+        out_file << "\n            return 0x" << iter->start << ';';
     }
-    out_file << "\n\t}";
+    out_file << "\n    }";
     out_file << "\n}";
 
     // Now we build the Unicode block end function
     out_file << "\n\nconstexpr uint32_t getLastCodePoint(Block unicode_block) {";
-    out_file << "\n\tswitch(unicode_block) {";
+    out_file << "\n    switch(unicode_block) {";
     for (auto iter = unicode_blocks.begin(); iter != unicode_blocks.end(); ++iter) {
-        out_file << "\n\tcase Block::" << iter->name << " :";
-        out_file << "\n\t\treturn 0x" << iter->end << ';';
+        out_file << "\n        case Block::" << iter->name << " :";
+        out_file << "\n            return 0x" << iter->end << ';';
     }
-    out_file << "\n\t}";
+    out_file << "\n    }";
     out_file << "\n}";
 
     if (include_block_size) {
         // Only add block sizes if requested.
         out_file << std::dec;
         out_file << "\n\nconstexpr uint32_t getBlockSize(Block unicode_block) {";
-        out_file << "\n\tswitch(unicode_block) {";
+        out_file << "\n    switch(unicode_block) {";
         for (auto iter = unicode_blocks.begin(); iter != unicode_blocks.end(); ++iter) {
-            out_file << "\n\tcase Block::" << iter->name << " :";
-            out_file << "\n\t\treturn " << (iter->end - iter->start + 1) << ';';
+            out_file << "\n        case Block::" << iter->name << " :";
+            out_file << "\n            return " << (iter->end - iter->start + 1) << ';';
         }
-        out_file << "\n\t}";
+        out_file << "\n    }";
         out_file << "\n}";
     }
 
