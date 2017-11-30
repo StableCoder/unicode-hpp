@@ -1,3 +1,7 @@
+# Pre-Generated Unicode Block Headers
+
+If you want to build your own, check the next section. Otherwise, several pre-generated unicode block versions can be found in the generated_headers/ folder.
+
 # Unicode C++ Header Generator
 
 This program builds a quick Unicode header for use in C++11 or
