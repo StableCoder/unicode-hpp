@@ -72,7 +72,7 @@ macro(_ClangTidy TIDY_TARGET_NAME)
         # Go through the parameters and figure out which are code files and which are include directories
         set(params "${ARGN}")
         foreach(param IN LISTS params)
-            string(SUBSTRING param 0 2 TIDY_TEMP_STRING)
+            string(SUBSTRING ${param} 0 2 TIDY_TEMP_STRING)
             if(TIDY_TEMP_STRING STREQUAL "-I")
                 set(TIDY_INCLUDE_DIRS "${TIDY_INCLUDE_DIRS}" "${param}")
             else()
