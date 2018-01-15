@@ -190,7 +190,7 @@ int main(int argc, const char **argv) {
 
     // Set the Unicode Version String
     out_file << "\n\n// The Unicode Version this is based on.\nconst char* version_str = \""
-             << unicode_vers << "\"";
+             << unicode_vers << "\";";
 
     // Set the Unicode Block Enums
     out_file << "\n\nenum class Block : uint32_t {";

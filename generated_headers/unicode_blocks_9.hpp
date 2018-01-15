@@ -14,7 +14,7 @@
 namespace unicode {
 
 // The Unicode Version this is based on.
-const char* version_str = "Unicode 9.0.0"
+const char* version_str = "Unicode 9.0.0";
 
 enum class Block : uint32_t {
     Basic_Latin,
