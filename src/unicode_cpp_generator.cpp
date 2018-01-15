@@ -161,7 +161,7 @@ int main(int argc, const char **argv) {
     }
 
     // All done, free the file data.
-    delete unicode_file;
+    delete[] unicode_file;
 
     /// Write Header
     // Now we proceed forward.
