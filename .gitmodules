@@ -1,0 +1,4 @@
+[submodule "cmake"]
+	path = cmake
+	url = https://git.stabletec.com/other/cmake-scripts.git
+	branch = master
