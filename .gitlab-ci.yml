@@ -41,7 +41,7 @@ Fedora/GCC:
   <<: *platform_unix_template
 
 Fedora/Clang:
-  image: stabletec/build-core:fedora-gcc
+  image: stabletec/build-core:fedora-clang
   <<: *platform_unix_template
 
 Debian/GCC:
@@ -49,7 +49,7 @@ Debian/GCC:
   <<: *platform_unix_template
 
 Debian/Clang:
-  image: stabletec/build-core:debian-gcc
+  image: stabletec/build-core:debian-clang
   <<: *platform_unix_template
 
 Ubuntu/GCC:
@@ -57,7 +57,7 @@ Ubuntu/GCC:
   <<: *platform_unix_template
 
 Ubuntu/Clang:
-  image: stabletec/build-core:ubuntu-gcc
+  image: stabletec/build-core:ubuntu-clang
   <<: *platform_unix_template
 
 openSUSE/GCC:
@@ -65,12 +65,17 @@ openSUSE/GCC:
   <<: *platform_unix_template
 
 openSUSE/Clang:
-  image: stabletec/build-core:opensuse-gcc
+  image: stabletec/build-core:opensuse-clang
   <<: *platform_unix_template
 
 Windows/MSVC:
   variables:
-    IMAGE: stabletec/build-core:windows-msvc2017
+    IMAGE: stabletec/build-core:windows-msvc
+  <<: *platform_windows_template
+
+Windows/Clang-cl:
+  variables:
+    IMAGE: stabletec/build-core:windows-clang-cl
   <<: *platform_windows_template
 
 # Analysis #
