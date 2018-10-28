@@ -1,12 +1,11 @@
-# Pre-Generated Unicode Block Headers
+# UnicodeHPP
 
-If you want to build your own, check the next section. Otherwise, several pre-generated unicode block versions can be found in the generated_headers/ folder.
+[![pipeline status](https://git.stabletec.com/utilities/unicode-hpp/badges/master/pipeline.svg)](https://git.stabletec.com/utilities/unicode-hpp/commits/master)
+[![license](https://img.shields.io/badge/license-MIT-blue.svg)](https://git.stabletec.com/utilities/unicode-hpp/blob/master/LICENSE)
 
-# Unicode C++ Header Generator
+This program builds a quick Unicode header for use in C++11 or higher programs. It lists all unicode blocks, and their starting and ending code points.
 
-This program builds a quick Unicode header for use in C++11 or
-higher programs. It lists all unicode blocks, and their starting
-and ending code points.
+Several pre-generated unicode block versions can be found in the generated_headers/ folder.
 
 ## Program Arguments:
 #### -h, --help
