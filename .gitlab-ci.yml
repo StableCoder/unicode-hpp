@@ -78,6 +78,15 @@ Windows/Clang-cl:
     IMAGE: stabletec/build-core:windows-clang-cl
   <<: *platform_windows_template
 
+MacOS/Clang:
+  stage: Platform Tests
+  tags:
+    - macos
+  script:
+    - mkdir build && cd build
+    - cmake .. -GNinja -DCMAKE_BUILD_TYPE=Release
+    - ninja
+
 # Analysis #
 
 .analysis_template: &analysis_template
