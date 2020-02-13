@@ -91,15 +91,15 @@ int main(int argc, const char **argv) {
     }
 
     if (input_file == "") {
-        std::cout << "Error: No input file given. Type --help for help." << std::endl;
-        return 0;
+        std::cerr << "Error: No input file given. Type --help for help." << std::endl;
+        return 1;
     }
 
     // In order to parse a file, we need to load the whole thing into memory.
     std::ifstream in_file(input_file.c_str(), std::ifstream::in);
     if (!in_file.is_open()) {
-        std::cout << "Error: Failed to open file " << input_file << std::endl;
-        return 0;
+        std::cerr << "Error: Failed to open file " << input_file << std::endl;
+        return 1;
     }
     // Seek to the end.
     in_file.seekg(0, std::ifstream::end);
@@ -125,9 +125,9 @@ int main(int argc, const char **argv) {
     // Only base-level node should be <ucd>
     rapidxml::xml_node<> *ucdNode = unicode_doc.first_node("ucd");
     if (ucdNode == nullptr) {
-        std::cout << "Error: No <ucd> base-level tag found. Invalid Unicode Block XML file."
+        std::cerr << "Error: No <ucd> base-level tag found. Invalid Unicode Block XML file."
                   << std::endl;
-        return 0;
+        return 1;
     }
 
     /// Get the Unicode Version
@@ -144,8 +144,8 @@ int main(int argc, const char **argv) {
     // Search for Blocks
     rapidxml::xml_node<> *blockNode = ucdNode->first_node("blocks");
     if (blockNode == nullptr) {
-        std::cout << "Error: No Unicode Blocks described in file." << std::endl;
-        return 0;
+        std::cerr << "Error: No Unicode Blocks described in file." << std::endl;
+        return 1;
     }
 
     /// Collect Block Data
@@ -179,8 +179,8 @@ int main(int argc, const char **argv) {
     std::ofstream out_file(output_dir + "unicode_blocks_" + unicode_vers + ".hpp",
                            std::ofstream::out);
     if (!out_file.is_open()) {
-        std::cout << "Failed to open header for writing: " << output_dir << "unicode_blocks.h";
-        return 0;
+        std::cerr << "Error: Failed to open header for writing: " << output_dir << "unicode_blocks_" << unicode_vers << ".hpp";
+        return 1;
     }
 
     // First, write the license disclaimer.
