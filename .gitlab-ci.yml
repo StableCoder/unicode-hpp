@@ -29,12 +29,23 @@ variables:
     - echo 'Copy-Item C:\workdir\* -Destination C:\workdir-cpy -Recurse' | out-file -encoding utf8 -append build.ps1
     - echo 'cd workdir-cpy' | out-file -encoding utf8 -append build.ps1
     - echo 'mkdir build; cd build' | out-file -encoding utf8 -append build.ps1
-    - echo "cmake .. -GNinja" | out-file -encoding utf8 -append build.ps1
+    - echo "cmake .. -GNinja -DCMAKE_BUILD_TYPE=Release" | out-file -encoding utf8 -append build.ps1
     - echo 'if(-not $?){throw}' | out-file -encoding utf8 -append build.ps1
     - echo 'ninja' | out-file -encoding utf8 -append build.ps1
     - echo 'if(-not $?){throw}' | out-file -encoding utf8 -append build.ps1
     - echo '} catch { exit 1 }' | out-file -encoding utf8 -append build.ps1
     - docker run --rm -v ${pwd}:C:\workdir $env:IMAGE C:\workdir\build.ps1
+
+.platform_macos_template: &platform_macos_template
+  stage: Platform Tests
+  tags:
+    - macos
+  dependencies: []
+  script:
+    - mkdir build && cd build
+    - cmake .. -GNinja -DCMAKE_BUILD_TYPE=Release
+    - ninja
+    - ctest
 
 Fedora/GCC:
   image: stabletec/build-core:fedora-gcc
@@ -78,14 +89,17 @@ Windows/Clang-cl:
     IMAGE: stabletec/build-core:windows-clang-cl
   <<: *platform_windows_template
 
-MacOS/Clang:
-  stage: Platform Tests
-  tags:
-    - macos
-  script:
-    - mkdir build && cd build
-    - cmake .. -GNinja -DCMAKE_BUILD_TYPE=Release
-    - ninja
+macOS/GCC:
+  variables:
+    CC: gcc
+    CXX: g++
+  <<: *platform_macos_template
+
+macOS/Clang:
+  variables:
+    CC: clang
+    CXX: clang++
+  <<: *platform_macos_template
 
 # Analysis #
 
