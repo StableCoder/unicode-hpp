@@ -116,5 +116,5 @@ macOS/Clang:
 
 Static Analysis:
   variables:
-    CMAKE_OPTIONS: -DCLANG_TIDY=ON -DCPPCHECK=ON -DIWYU=ON
+    CMAKE_OPTIONS: -DCLANG_TIDY=ON -DCPPCHECK=ON
   <<: *analysis_template
