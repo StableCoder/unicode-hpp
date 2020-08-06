@@ -115,7 +115,6 @@ macOS/Clang:
 .analysis_template: &analysis_template
   stage: Analysis
   image: stabletec/build-foe:fedora
-  allow_failure: true
   tags:
     - docker-linux
   script:
