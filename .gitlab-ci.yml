@@ -21,20 +21,13 @@ variables:
 
 .platform_windows_template: &platform_windows_template
   stage: Platform Tests
+  image: stabletec/build-core:windows
   tags:
     - docker-windows
   script:
-    - echo 'try {'  | out-file -encoding utf8 build.ps1
-    - echo 'cd ..; mkdir workdir-cpy' | out-file -encoding utf8 -append build.ps1
-    - echo 'Copy-Item C:\workdir\* -Destination C:\workdir-cpy -Recurse' | out-file -encoding utf8 -append build.ps1
-    - echo 'cd workdir-cpy' | out-file -encoding utf8 -append build.ps1
-    - echo 'mkdir build; cd build' | out-file -encoding utf8 -append build.ps1
-    - echo "cmake .. -GNinja -DCMAKE_BUILD_TYPE=Release" | out-file -encoding utf8 -append build.ps1
-    - echo 'if(-not $?){throw}' | out-file -encoding utf8 -append build.ps1
-    - echo 'ninja' | out-file -encoding utf8 -append build.ps1
-    - echo 'if(-not $?){throw}' | out-file -encoding utf8 -append build.ps1
-    - echo '} catch { exit 1 }' | out-file -encoding utf8 -append build.ps1
-    - docker run --rm -v ${pwd}:C:\workdir $env:IMAGE C:\workdir\build.ps1
+    - mkdir build; cd build
+    - cmake .. -GNinja -DCMAKE_BUILD_TYPE=Release
+    - ninja
 
 .platform_macos_template: &platform_macos_template
   stage: Platform Tests
@@ -45,55 +38,71 @@ variables:
     - mkdir build && cd build
     - cmake .. -GNinja -DCMAKE_BUILD_TYPE=Release
     - ninja
-    - ctest
 
 Fedora/GCC:
-  image: stabletec/build-core:fedora-gcc
+  image: stabletec/build-core:fedora
+  variables:
+    CC: gcc
+    CXX: g++
   <<: *platform_unix_template
 
 Fedora/Clang:
-  image: stabletec/build-core:fedora-clang
+  image: stabletec/build-core:fedora
+  variables:
+    CC: clang
+    CXX: clang++
   <<: *platform_unix_template
 
 Debian/GCC:
-  image: stabletec/build-core:debian-gcc
+  image: stabletec/build-core:debian
+  variables:
+    CC: gcc
+    CXX: g++
   <<: *platform_unix_template
 
 Debian/Clang:
-  image: stabletec/build-core:debian-clang
+  image: stabletec/build-core:debian
+  variables:
+    CC: clang
+    CXX: clang++
   <<: *platform_unix_template
 
 Ubuntu/GCC:
-  image: stabletec/build-core:ubuntu-gcc
+  image: stabletec/build-core:ubuntu
+  variables:
+    CC: gcc
+    CXX: g++
   <<: *platform_unix_template
 
 Ubuntu/Clang:
-  image: stabletec/build-core:ubuntu-clang
+  image: stabletec/build-core:ubuntu
+  variables:
+    CC: clang
+    CXX: clang++
   <<: *platform_unix_template
 
 openSUSE/GCC:
-  image: stabletec/build-core:opensuse-gcc
+  image: stabletec/build-core:opensuse
+  variables:
+    CC: gcc
+    CXX: g++
   <<: *platform_unix_template
 
 openSUSE/Clang:
-  image: stabletec/build-core:opensuse-clang
+  image: stabletec/build-core:opensuse
+  variables:
+    CC: clang
+    CXX: clang++
   <<: *platform_unix_template
 
 Windows/MSVC:
-  variables:
-    IMAGE: stabletec/build-core:windows-msvc
   <<: *platform_windows_template
 
 Windows/Clang-cl:
   variables:
-    IMAGE: stabletec/build-core:windows-clang-cl
+    CC: clang-cl
+    CXX: clang-cl
   <<: *platform_windows_template
-
-macOS/GCC:
-  variables:
-    CC: gcc
-    CXX: g++
-  <<: *platform_macos_template
 
 macOS/Clang:
   variables:
@@ -105,16 +114,18 @@ macOS/Clang:
 
 .analysis_template: &analysis_template
   stage: Analysis
-  image: stabletec/build-foe:fedora-clang
+  image: stabletec/build-foe:fedora
   allow_failure: true
   tags:
     - docker-linux
   script:
     - mkdir build && cd build
-    - cmake .. -GNinja -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTS=ON -DBUILD_EXAMPLES=ON -DNO_VULKAN_DEVICE=ON -DBUILD_WINDOW_TESTS=OFF ${CMAKE_OPTIONS}
+    - cmake .. -GNinja -DCMAKE_BUILD_TYPE=Release ${CMAKE_OPTIONS}
     - ninja
 
 Static Analysis:
   variables:
     CMAKE_OPTIONS: -DCLANG_TIDY=ON -DCPPCHECK=ON
+    CC: clang
+    CXX: clang++
   <<: *analysis_template
