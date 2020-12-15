@@ -1,7 +1,7 @@
 # UnicodeHPP
 
-[![pipeline status](https://git.stabletec.com/utilities/unicode-hpp/badges/master/pipeline.svg)](https://git.stabletec.com/utilities/unicode-hpp/commits/master)
-[![license](https://img.shields.io/badge/license-MIT-blue.svg)](https://git.stabletec.com/utilities/unicode-hpp/blob/master/LICENSE)
+[![pipeline status](https://git.stabletec.com/utilities/unicode-hpp/badges/main/pipeline.svg)](https://git.stabletec.com/utilities/unicode-hpp/commits/main)
+[![license](https://img.shields.io/badge/license-MIT-blue.svg)](https://git.stabletec.com/utilities/unicode-hpp/blob/main/LICENSE)
 
 This program builds a quick Unicode header for use in C++11 or higher programs. It lists all unicode blocks, and their starting and ending code points.
 
