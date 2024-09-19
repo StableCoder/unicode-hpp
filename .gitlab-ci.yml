@@ -6,38 +6,52 @@ stages:
 
 variables:
   GIT_SUBMODULE_STRATEGY: recursive
-  CTEST_OUTPUT_ON_FAILURE: '1'
 
 # Platform Tests #
 
 .platform_unix_template: &platform_unix_template
   stage: Platform Tests
   tags:
-    - docker-linux
+    - container
+    - linux
+    - amd64
   script:
-    - mkdir build && cd build
-    - cmake .. -GNinja -DCMAKE_BUILD_TYPE=Release
-    - ninja
+    - cmake . -B build -G Ninja
+    - cmake --build build
 
 .platform_windows_template: &platform_windows_template
   stage: Platform Tests
-  image: stabletec/build-core:windows
+  image: stabletec/build-core:windows-ltsc2022
   tags:
-    - docker-windows
+    - container
+    - windows
+    - ltsc2022
+    - amd64
   script:
-    - mkdir build; cd build
-    - cmake .. -GNinja -DCMAKE_BUILD_TYPE=Release
-    - ninja
+    - cmake . -B build -G Ninja
+    - cmake --build build
+
+.platform_msys_template: &platform_msys_template
+  stage: Platform Tests
+  image: stabletec/build-core:msys-ltsc2022-${MSYS_SUBSYSTEM}
+  tags:
+    - container
+    - windows
+    - ltsc2022
+    - amd64
+  script:
+    # set the directory bash will start in
+    - $env:HOME="$(cygpath -u $(pwd))"
+    - bash.exe -lc "cmake . -B build -G Ninja"
+    - bash.exe -lc 'cmake --build build'
 
 .platform_macos_template: &platform_macos_template
   stage: Platform Tests
   tags:
     - macos
-  dependencies: []
   script:
-    - mkdir build && cd build
-    - cmake .. -GNinja -DCMAKE_BUILD_TYPE=Release
-    - ninja
+    - cmake . -B build -G Ninja
+    - cmake --build build
 
 Fedora/GCC:
   image: stabletec/build-core:fedora
@@ -104,6 +118,30 @@ Windows/Clang-cl:
     CXX: clang-cl
   <<: *platform_windows_template
 
+Windows/Clang:
+  variables:
+    CC: clang
+    CXX: clang
+  <<: *platform_windows_template
+
+MSYS/GCC:
+  parallel:
+    matrix:
+      - MSYS_SUBSYSTEM: [ucrt64, mingw64]
+  <<: *platform_windows_template
+
+MSYS/Clang:
+  parallel:
+    matrix:
+      - MSYS_SUBSYSTEM: [ucrt64, mingw64, clang64]
+  <<: *platform_windows_template
+
+macOS/AppleClang:
+  variables:
+    CC: clang
+    CXX: clang++
+  <<: *platform_macos_template
+
 macOS/Clang:
   variables:
     CC: clang
@@ -116,11 +154,11 @@ macOS/Clang:
   stage: Analysis
   image: stabletec/build-foe:fedora
   tags:
-    - docker-linux
+    - container
+    - linux
   script:
-    - mkdir build && cd build
-    - cmake .. -GNinja -DCMAKE_BUILD_TYPE=Release ${CMAKE_OPTIONS}
-    - ninja
+    - cmake . -B build -G Ninja
+    - cmake --build build
 
 Static Analysis:
   variables:
