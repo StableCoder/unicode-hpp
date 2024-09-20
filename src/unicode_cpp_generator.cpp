@@ -28,6 +28,7 @@
 
 // C++
 #include <algorithm>
+#include <cstdint>
 #include <cstring>
 #include <fstream>
 #include <iostream>
@@ -179,7 +180,8 @@ int main(int argc, const char **argv) {
     std::ofstream out_file(output_dir + "unicode_blocks_" + unicode_vers + ".hpp",
                            std::ofstream::out);
     if (!out_file.is_open()) {
-        std::cerr << "Error: Failed to open header for writing: " << output_dir << "unicode_blocks_" << unicode_vers << ".hpp";
+        std::cerr << "Error: Failed to open header for writing: " << output_dir << "unicode_blocks_"
+                  << unicode_vers << ".hpp";
         return 1;
     }
 
